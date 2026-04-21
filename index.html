@@ -10,25 +10,29 @@
 </head>
 
 <body>
+	
+	<h3>입력창 방식</h3>
+	<p>입력창을 터치하면 스마트폰 자체의 연락처 자동완성이 뜹니다.</p>
+	<input type="text" autocomplete="name" placeholder="이름 (터치하세요)">
+	<input type="tel" autocomplete="tel" placeholder="연락처">
+	
+	<hr>
+	
+	<h3>버튼 방식</h3>
 	<p id="supported"></p>
-	<button id="pickContact">연락처 선택</button>
+	<button id="pick-contact">연락처 선택</button>
 	<pre id="output"></pre>
 
 	<script>
-		const pickContactBtn = document.querySelector("#pickContact");
-		const output = document.querySelector("#output");
 		const supported = "contacts" in navigator;
 		document.querySelector("#supported").textContent = "이 기기에서 연락처 선택이 " + (supported ? "지원됨" : "지원되지 않음");
 
-		pickContactBtn.addEventListener("click", async () => {
+		document.querySelector("#pick-contact").addEventListener("click", async () => {
 			try {
-				const contact = await navigator.contacts.select(
-					["name", "tel"],
-					{ multiple: true }
-				);
-				output.textContent = JSON.stringify(contact, null, 2);
+				const contact = await navigator.contacts.select(["name", "tel"]);
+				document.querySelector("#output").textContent = JSON.stringify(contact, null, 2);
 			} catch (err) {
-				output.textContent = JSON.stringify(err, null, 2);
+				document.querySelector("#output").textContent = "취소되었거나 지원하지 않는 기기입니다.";
 			}
 		});
 	</script>
