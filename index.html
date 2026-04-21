@@ -21,7 +21,7 @@
 		pickContactBtn.addEventListener("click", async () => {
 			try {
 				const contact = await navigator.contacts.select(
-					["name", "email", "tel"],
+					["name", "tel"],
 					{ multiple: true }
 				);
 				console.log(contact);
