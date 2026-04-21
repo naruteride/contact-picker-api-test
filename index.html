@@ -8,10 +8,13 @@
 </head>
 
 <body>
+	<p id="supported"></p>
 	<button id="pickContact">연락처 선택</button>
 
 	<script>
 		const pickContactBtn = document.getElementById("pickContact");
+		const supported = "contacts" in navigator;
+		document.getElementById("supported").textContent = "이 기기에서 연락처 선택이 " + (supported ? "지원됨" : "지원되지 않음");
 
 		pickContactBtn.addEventListener("click", async () => {
 			try {
