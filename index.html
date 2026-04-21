@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>연락처 선택 API 테스트</title>
+</head>
+
+<body>
+	<button id="pickContact">연락처 선택</button>
+
+	<script>
+		const pickContactBtn = document.getElementById("pickContact");
+
+		pickContactBtn.addEventListener("click", async () => {
+			try {
+				const contact = await navigator.contacts.select(
+					["name", "email", "tel"],
+					{ multiple: true }
+				);
+				console.log(contact);
+			} catch (err) {
+				console.error(err);
+			}
+		});
+	</script>
+</body>
+
+</html>
