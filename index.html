@@ -12,20 +12,35 @@
 <body>
 	<p id="supported"></p>
 	<button id="pickContact">연락처 선택</button>
+	<pre id="output"></pre>
 
 	<script>
 		const pickContactBtn = document.getElementById("pickContact");
-		const supported = "contacts" in navigator;
-		document.getElementById("supported").textContent = "이 기기에서 연락처 선택이 " + (supported ? "지원됨" : "지원되지 않음");
+		const output = document.getElementById("output");
 
 		pickContactBtn.addEventListener("click", async () => {
+			// 1. API 지원 여부 확인
+			if (!("contacts" in navigator)) {
+				output.textContent = "이 브라우저는 Contact Picker API를 지원하지 않습니다.";
+				return;
+			}
+
 			try {
-				const contact = await navigator.contacts.select(
-					["name", "tel"],
-					{ multiple: true }
-				);
-				console.log(contact);
+				// 2. 기기가 지원하는 속성만 필터링해서 요청
+				const supported = await navigator.contacts.getProperties();
+				const desired = ["name", "email", "tel"];
+				const properties = desired.filter(p => supported.includes(p));
+
+				if (properties.length === 0) {
+					output.textContent = "지원되는 연락처 속성이 없습니다.";
+					return;
+				}
+
+				// 3. 지원 속성으로만 선택 요청
+				const contacts = await navigator.contacts.select(properties, { multiple: true });
+				output.textContent = JSON.stringify(contacts, null, 2);
 			} catch (err) {
+				output.textContent = `오류: [${err.name}] ${err.message}`;
 				console.error(err);
 			}
 		});
